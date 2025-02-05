@@ -25,6 +25,10 @@ def convert_line_endings(folder_path):
     
     # 遍历文件夹中的所有文件
     for root, dirs, files in os.walk(folder_path):
+        # 跳过 .git 目录
+        if '.git' in dirs:
+            dirs.remove('.git')
+            
         for file in files:
             file_path = os.path.join(root, file)
             
@@ -45,6 +49,7 @@ def convert_line_endings(folder_path):
                 new_content = content.replace(b'\n', b'\r\n').replace(b'\r\r\n', b'\r\n')
                 if new_content == content:
                     stats['no_need'] += 1
+                    print(f'无需转换: {file_path}')
                     continue
                 
                 # 写回文件
@@ -72,8 +77,10 @@ def select_folder():
         print(f'无需转换数量: {stats["no_need"]}')
         print(f'转换失败数量: {stats["failed"]}')
         print('\n转换完成！')
+        input('\n按回车键退出...')
     else:
         print('未选择文件夹')
+        input('\n按回车键退出...')
 
 if __name__ == '__main__':
     select_folder()
